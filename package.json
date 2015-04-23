@@ -1,6 +1,9 @@
 {
   "name": "couchdb-oauth",
   "version": "1.0.0",
+  "scripts": {
+    "test": "node index.js"
+  },
   "dependencies": {
     "multicouch": "^0.8.2",
     "oauth": "^0.9.12",

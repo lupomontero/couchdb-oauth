@@ -2,6 +2,7 @@ var os = require('os');
 var fs = require('fs');
 var path = require('path');
 var util = require('util');
+var assert = require('assert');
 var rimraf = require('rimraf');
 var MultiCouch = require('multicouch');
 var request = require('request');
@@ -89,9 +90,19 @@ function checkOAuth() {
     couchUrl + '/_session',
     'token1',
     'tokenSecret1',
-    function (err, data, res) {
+    function (err, data) {
       if (err) { return done(err); }
-      console.log(util.inspect(JSON.parse(data)));
+      var parsed = JSON.parse(data);
+      assert.deepEqual(parsed, {
+        ok: true,
+        userCtx: { name: 'lupo', roles: [] },
+        info: {
+          authentication_db: '_users',
+          authentication_handlers: [ 'oauth', 'cookie', 'default' ],
+          authenticated: 'oauth'
+        }
+      });
+      console.log(util.inspect(parsed, { colors: true }));
       removeUser();      
     });
 }
