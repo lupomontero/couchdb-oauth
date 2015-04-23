@@ -1,0 +1,10 @@
+{
+  "name": "couchdb-oauth",
+  "version": "1.0.0",
+  "dependencies": {
+    "multicouch": "^0.8.2",
+    "oauth": "^0.9.12",
+    "request": "^2.55.0",
+    "rimraf": "^2.3.2"
+  }
+}
