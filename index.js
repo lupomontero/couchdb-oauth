@@ -9,10 +9,13 @@ var request = require('request');
 var OAuth = require('oauth').OAuth;
 
 
+// Data dir for the CouchDB instance that we'll start with multicouch.
 var dataDir = path.join(os.tmpdir(), 'couchdb-oauth-test');
-rimraf.sync(dataDir);
-fs.mkdirSync(dataDir);
+rimraf.sync(dataDir); // Remove if already exists
+fs.mkdirSync(dataDir); // Create data dir
 
+
+// Use multicouch to spin up a CouchDB instance.
 var couchUrl = 'http://127.0.0.1:55984';
 var couch = new MultiCouch({
   port: 55984,
@@ -20,6 +23,7 @@ var couch = new MultiCouch({
 });
 
 
+// A dummy user to test OAuth authentication.
 var userDocUrl = couchUrl + '/_users/org.couchdb.user:lupo';
 var userDoc = {
   name: 'lupo',
@@ -37,6 +41,7 @@ var userDoc = {
 };
 
 
+// Start CouchDB and wait for it to be accepting connections.
 function startCouch() {
   var retries = 10;
   function wait() {
@@ -53,6 +58,7 @@ function startCouch() {
 }
 
 
+// Configure CouchDB to use _users database to store OAuth credentials.
 function configureCouch() {
   request.put(couchUrl + '/_config/couch_httpd_oauth/use_users_db', {
     json: true,
@@ -64,6 +70,7 @@ function configureCouch() {
 }
 
 
+// Create dummy user.
 function createUser() {
   request.put(userDocUrl, {
     json: true,
@@ -76,6 +83,7 @@ function createUser() {
 }
 
 
+// Test that we can authenticate the dummy user using OAuth 1.0.
 function checkOAuth() {
   var oauth = new OAuth(
     couchUrl + '/_oauth/request_token',
@@ -108,6 +116,7 @@ function checkOAuth() {
 }
 
 
+// Remove dummy user.
 function removeUser() {
   request.del(userDocUrl, {
     json: true,
@@ -132,5 +141,5 @@ function done(err) {
 }
 
 
-startCouch();
+startCouch(); // Start the action...
 
