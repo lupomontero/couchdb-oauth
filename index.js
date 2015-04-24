@@ -48,7 +48,7 @@ function startCouch() {
     request(couchUrl, function (err) {
       if (err) {
         if (!retries--) { return done(err); }
-        setTimeout(wait, 1000);
+        return setTimeout(wait, 1000);
       }
       configureCouch();
     });
